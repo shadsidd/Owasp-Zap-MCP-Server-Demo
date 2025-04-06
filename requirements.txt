@@ -1,5 +1,22 @@
-requests>=2.25.1
-websockets>=10.0
-dataclasses>=0.8; python_version < '3.7'
-typing>=3.7.4; python_version < '3.5'
-urllib3>=1.26.5 
+# Core dependencies
+python-owasp-zap-v2.4==0.0.21
+websockets==12.0
+requests==2.31.0
+
+# CLI and user interface
+docopt==0.6.2
+rich==14.0.0
+
+# Web server components (for API endpoints)
+flask==3.0.2
+aiohttp==3.9.3
+
+# Testing tools
+pytest==8.0.0
+pytest-asyncio==0.23.5
+pytest-aiohttp==1.0.5
+
+# Utilities
+python-dotenv==1.0.1
+setuptools>=65.5.1
+wheel>=0.38.0 
