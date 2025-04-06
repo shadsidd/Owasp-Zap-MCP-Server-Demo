@@ -1,18 +1,30 @@
 {
-      "name": "mcp-zap-testing",
+      "name": "mcp-zap-server",
       "version": "1.0.0",
-      "type": "module",
-      "bin": {
-        "mcp-zap-testing": "src/index.js"
-      },
+      "description": "MCP server for OWASP ZAP with bidirectional communication",
+      "main": "src/index.js",
       "scripts": {
-        "start": "node src/index.js",
-        "dev": "node --watch src/index.js",
-        "inspect": "npx -y @modelcontextprotocol/inspector node src/index.js"
+            "start": "node src/index.js",
+            "test": "echo \"Error: no test specified\" && exit 1"
       },
       "dependencies": {
-        "@modelcontextprotocol/sdk": "^1.0.0",
-        "axios": "^1.6.2",
-        "zod": "^3.22.4"
-      }
-    }
+            "express": "^4.17.1",
+            "express-rate-limit": "^5.3.0",
+            "ws": "^8.2.3",
+            "axios": "^0.24.0"
+      },
+      "repository": {
+            "type": "git",
+            "url": "https://github.com/yourusername/mcp-zap-server"
+      },
+      "keywords": [
+            "mcp",
+            "owasp",
+            "zap",
+            "security",
+            "scanning",
+            "api"
+      ],
+      "author": "Your Name",
+      "license": "MIT"
+}

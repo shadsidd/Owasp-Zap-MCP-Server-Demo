@@ -1,0 +1,5 @@
+requests>=2.25.1
+websockets>=10.0
+dataclasses>=0.8; python_version < '3.7'
+typing>=3.7.4; python_version < '3.5'
+urllib3>=1.26.5 

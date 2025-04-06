@@ -1,151 +1,95 @@
 import axios from 'axios';
 
-    class ZapClient {
-      constructor() {
+class ZapClient {
+    constructor() {
         this.apiUrl = null;
         this.apiKey = null;
         this.isConfigured = false;
-      }
+    }
 
-      configure(apiUrl, apiKey) {
+    configure(apiUrl, apiKey) {
         this.apiUrl = apiUrl;
         this.apiKey = apiKey;
         this.isConfigured = true;
         console.log(`ZAP API configured with endpoint: ${apiUrl}`);
-      }
+    }
 
-      checkConfiguration() {
+    checkConfiguration() {
         if (!this.isConfigured) {
-          throw new Error('ZAP API not configured. Use the configure tool first.');
+            throw new Error('ZAP API not configured. Use the configure tool first.');
         }
-      }
+    }
 
-      async request(endpoint, params = {}) {
+    async request(endpoint, params = {}) {
         this.checkConfiguration();
         
         try {
-          // Add API key to all requests
-          const requestParams = { ...params, apikey: this.apiKey };
-          
-          const response = await axios.get(`${this.apiUrl}/${endpoint}`, { 
-            params: requestParams 
-          });
-          
-          return response.data;
+            // Format URL correctly for ZAP API
+            const url = `${this.apiUrl}/JSON/${endpoint}`;
+            const requestParams = { ...params, apikey: this.apiKey };
+            
+            console.log(`Making request to: ${url} with params:`, requestParams);
+            const response = await axios.get(url, { params: requestParams });
+            console.log('ZAP Response:', response.data);
+            
+            return response.data;
         } catch (error) {
-          console.error('ZAP API request failed:', error.message);
-          if (error.response) {
-            throw new Error(`ZAP API error: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
-          }
-          throw new Error(`ZAP API request failed: ${error.message}`);
-        }
-      }
-
-      async startActiveScan(targetUrl, scanPolicyName, contextId) {
-        console.log(`Starting active scan for ${targetUrl}`);
-        
-        const params = { url: targetUrl };
-        if (scanPolicyName) params.scanPolicyName = scanPolicyName;
-        if (contextId) params.contextId = contextId;
-        
-        const response = await this.request('ascan/action/scan', params);
-        
-        // Mock response for development
-        if (!response || !this.apiUrl) {
-          console.log('Using mock scan response');
-          return { scanId: 'mock-scan-' + Date.now() };
-        }
-        
-        return { scanId: response.scan };
-      }
-
-      async getScanStatus(scanId) {
-        console.log(`Getting status for scan ${scanId}`);
-        
-        // Mock response for development
-        if (!this.apiUrl || scanId.startsWith('mock-')) {
-          console.log('Using mock scan status');
-          return { 
-            status: Math.floor(Math.random() * 100), 
-            state: ['PENDING', 'RUNNING', 'FINISHED'][Math.floor(Math.random() * 3)] 
-          };
-        }
-        
-        const response = await this.request('ascan/view/status', { scanId });
-        return { 
-          status: parseInt(response.status), 
-          state: parseInt(response.status) < 100 ? 'RUNNING' : 'FINISHED' 
-        };
-      }
-
-      async getAlerts(targetUrl, riskLevel) {
-        console.log(`Getting alerts for ${targetUrl}`);
-        
-        const params = { baseurl: targetUrl };
-        if (riskLevel) params.riskLevel = riskLevel;
-        
-        // Mock response for development
-        if (!this.apiUrl) {
-          console.log('Using mock alerts');
-          return [
-            {
-              id: '1',
-              name: 'Cross Site Scripting (Reflected)',
-              risk: 'High',
-              confidence: 'Medium',
-              description: 'Cross-site Scripting (XSS) is when an attacker can inject malicious code into a web page that is then executed in users\' browsers.'
-            },
-            {
-              id: '2',
-              name: 'SQL Injection',
-              risk: 'High',
-              confidence: 'Medium',
-              description: 'SQL injection may be possible. This can allow an attacker to manipulate existing queries, execute new ones, or bypass authentication.'
+            console.error('ZAP API request failed:', error.message);
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                throw new Error(`ZAP API error: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
             }
-          ];
+            throw new Error(`ZAP API request failed: ${error.message}`);
         }
-        
-        const response = await this.request('core/view/alerts', params);
-        return response.alerts || [];
-      }
+    }
 
-      async spiderUrl(targetUrl, maxChildren, recurse) {
+    async startActiveScan(targetUrl) {
+        console.log(`Starting active scan for ${targetUrl}`);
+        const response = await this.request('ascan/action/scan', { url: targetUrl });
+        const scanId = response.scan || '';
+        console.log('Active scan started with ID:', scanId);
+        return { scanId };
+    }
+
+    async getScanStatus(scanId) {
+        console.log(`Getting status for scan ${scanId}`);
+        const response = await this.request('ascan/view/status', { scanId });
+        const status = parseInt(response.status || '0');
+        console.log('Scan status:', status);
+        return { status };
+    }
+
+    async spiderUrl(targetUrl) {
         console.log(`Starting spider for ${targetUrl}`);
-        
-        const params = { url: targetUrl };
-        if (maxChildren !== undefined) params.maxChildren = maxChildren;
-        if (recurse !== undefined) params.recurse = recurse;
-        
-        // Mock response for development
-        if (!this.apiUrl) {
-          console.log('Using mock spider response');
-          return { scanId: 'mock-spider-' + Date.now() };
-        }
-        
-        const response = await this.request('spider/action/scan', params);
-        return { scanId: response.scan };
-      }
+        const response = await this.request('spider/action/scan', { url: targetUrl });
+        const scanId = response.scan || '';
+        console.log('Spider started with ID:', scanId);
+        return { scanId };
+    }
 
-      async getSpiderStatus(scanId) {
+    async getSpiderStatus(scanId) {
         console.log(`Getting status for spider ${scanId}`);
-        
-        // Mock response for development
-        if (!this.apiUrl || scanId.startsWith('mock-')) {
-          console.log('Using mock spider status');
-          return { 
-            status: Math.floor(Math.random() * 100), 
-            state: ['PENDING', 'RUNNING', 'FINISHED'][Math.floor(Math.random() * 3)] 
-          };
-        }
-        
         const response = await this.request('spider/view/status', { scanId });
-        return { 
-          status: parseInt(response.status), 
-          state: parseInt(response.status) < 100 ? 'RUNNING' : 'FINISHED' 
-        };
-      }
+        const status = parseInt(response.status || '0');
+        console.log('Spider status:', status);
+        return { status };
+    }
 
-      async generateReport(targetUrl, format) {
+    async getAlerts(targetUrl) {
+        console.log(`Getting alerts for ${targetUrl}`);
+        const response = await this.request('core/view/alerts', { baseurl: targetUrl });
+        const alerts = response.alerts || [];
+        console.log(`Found ${alerts.length} alerts`);
+        return alerts.map(alert => ({
+            risk: alert.risk,
+            name: alert.name,
+            description: alert.description,
+            confidence: alert.confidence,
+            url: alert.url
+        }));
+    }
+
+    async generateReport(targetUrl, format) {
         console.log(`Generating ${format} report for ${targetUrl}`);
         
         // Mock response for development
@@ -172,7 +116,7 @@ import axios from 'axios';
         return { 
           summary: `Report generated successfully. Saved to: ${response.reportPath || 'Unknown location'}` 
         };
-      }
     }
+}
 
-    export const zapClient = new ZapClient();
+export const zapClient = new ZapClient();
