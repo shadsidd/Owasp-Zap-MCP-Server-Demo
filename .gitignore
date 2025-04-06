@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# Mac OS
+.DS_Store
+
+# Generated files
+*.html
+.mcp_server_port
+
+# IDE
+.idea/
+.vscode/
