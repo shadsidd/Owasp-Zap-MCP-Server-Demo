@@ -39,8 +39,8 @@ A WebSocket-based Mission Control Protocol (MCP) server for OWASP ZAP security s
 
 2. **Setup Project**:
    ```bash
-   git clone https://github.com/yourusername/owasp-mcp-server
-   cd owasp-mcp-server
+   git clone https://github.com/shadsidd/Owasp-Zap-MCP-Server-Demo.git
+   cd Owasp-Zap-MCP-Server-Demo
    python -m venv venv
    source venv/bin/activate  # Windows: .\venv\Scripts\activate
    pip install -r requirements.txt
