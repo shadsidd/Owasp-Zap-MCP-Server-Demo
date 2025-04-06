@@ -9,45 +9,18 @@ A WebSocket-based Mission Control Protocol (MCP) server for OWASP ZAP security s
 - Java Runtime Environment (JRE) 8+
 - Sudo/Administrator privileges (required for ZAP)
 
-## Important Notes
+## Why MCP Server?
 
-1. **Sudo Requirements**: 
-   - OWASP ZAP requires sudo/administrator privileges to run
-   - You will be prompted for your password when starting ZAP
-
-2. **Port Configuration**:
-   - ZAP uses port 8080 by default
-   - MCP Server uses port 3000
-   - Ensure these ports are not in use before starting
-
-3. **Common Issues**:
-   - If you see "Address already in use" error:
-     ```bash
-     # Check what's using port 8080
-     sudo lsof -i :8080
-     # Kill the process if needed
-     sudo kill -9 <PID>
-     ```
-   - If ZAP fails to start, try:
-     ```bash
-     # Clear any existing ZAP processes
-     pkill -f zap
-     ```
-
-## Project Structure
-
-```
-owasp-mcp-server/
-├── mcp_server.py      # Main WebSocket server implementation
-├── mcp_client.py      # Core client library for MCP server interaction
-├── mcp_cli.py         # Command line tool for scanning
-├── test_client.py     # Learning tool for understanding the system
-├── requirements.txt   # Python dependencies
-└── examples/         # Integration examples and usage patterns
-    ├── real_time_monitor.py  # Live security scan monitoring
-    ├── batch_scanner.py      # Concurrent domain scanning
-    └── scan_domains.py       # Example of scanning multiple domains
-```
+| Feature | MCP Server | ZAP UI | ZAP API |
+|---------|------------|---------|---------|
+| Automation | ✅ Full | ❌ Limited | ✅ Basic |
+| Real-time Updates | ✅ WebSocket | ✅ Visual | ❌ Polling |
+| CI/CD Integration | ✅ Native | ❌ Manual | ✅ Complex |
+| Batch Processing | ✅ Yes | ❌ No | ✅ Limited |
+| Learning Curve | 🟡 Medium | 🟢 Easy | 🔴 Hard |
+| Progress Tracking | ✅ Real-time | ✅ Visual | ❌ Manual |
+| Multiple Domains | ✅ Concurrent | ❌ Sequential | 🟡 Limited |
+| Error Handling | ✅ Robust | ✅ Basic | ❌ Manual |
 
 ## Core Components
 
@@ -121,24 +94,33 @@ The `examples/` directory contains scripts demonstrating key features:
 - `team_notifications.py` - Email, Slack, and Teams notifications
 - `custom_rules.py` - Specialized security rules
 
-## Why MCP Server?
 
-| Feature | MCP Server | ZAP UI | ZAP API |
-|---------|------------|---------|---------|
-| Automation | ✅ Full | ❌ Limited | ✅ Basic |
-| Real-time Updates | ✅ WebSocket | ✅ Visual | ❌ Polling |
-| CI/CD Integration | ✅ Native | ❌ Manual | ✅ Complex |
-| Batch Processing | ✅ Yes | ❌ No | ✅ Limited |
-| Learning Curve | 🟡 Medium | 🟢 Easy | 🔴 Hard |
-| Progress Tracking | ✅ Real-time | ✅ Visual | ❌ Manual |
-| Multiple Domains | ✅ Concurrent | ❌ Sequential | 🟡 Limited |
-| Error Handling | ✅ Robust | ✅ Basic | ❌ Manual |
 
-## Troubleshooting
+## Important Notes
 
-- **ZAP Issues**: Ensure port 8080 is free and ZAP has proper permissions
-- **Connection Issues**: Verify both ZAP (port 8080) and MCP server (port 3000) are running
-- **Scan Problems**: Check network connectivity and target domain accessibility
+1. **Sudo Requirements**: 
+   - OWASP ZAP requires sudo/administrator privileges to run
+   - You will be prompted for your password when starting ZAP
+
+2. **Port Configuration**:
+   - ZAP uses port 8080 by default
+   - MCP Server uses port 3000
+   - Ensure these ports are not in use before starting
+
+3. **Common Issues**:
+   - If you see "Address already in use" error:
+     ```bash
+     # Check what's using port 8080
+     sudo lsof -i :8080
+     # Kill the process if needed
+     sudo kill -9 <PID>
+     ```
+   - If ZAP fails to start, try:
+     ```bash
+     # Clear any existing ZAP processes
+     pkill -f zap
+     ```
+
 
 ## Scan Types
 
