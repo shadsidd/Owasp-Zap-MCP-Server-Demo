@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/shadsidd-owasp-zap-mcp-server-demo-badge.png)](https://mseep.ai/app/shadsidd-owasp-zap-mcp-server-demo)
+
 # OWASP MCP Server
 
 A WebSocket-based Mission Control Protocol (MCP) server for OWASP ZAP security scanning, enabling real-time control and monitoring of security assessments.
